@@ -6,21 +6,20 @@ interface CameraRevealImageProps {
   onSrc: string;
 }
 
+type MaskStyle = CSSProperties & { '--reveal-radius'?: string };
+
 export function CameraRevealImage({ offSrc, onSrc }: CameraRevealImageProps) {
   const [ref, isVisible] = useRevealOnScroll();
 
-  const maskGradient = 'radial-gradient(circle, #000 15%, transparent 100%)';
-  const maskSize = isVisible ? '320% 320%' : '1% 1%';
-  const maskStyle: CSSProperties = {
+  const maskGradient =
+    'radial-gradient(circle at 100% 0%, #000 var(--reveal-radius), transparent calc(var(--reveal-radius) + 15%))';
+  const maskStyle: MaskStyle = {
+    '--reveal-radius': isVisible ? '115%' : '0%',
     WebkitMaskImage: maskGradient,
     maskImage: maskGradient,
     WebkitMaskRepeat: 'no-repeat',
     maskRepeat: 'no-repeat',
-    WebkitMaskPosition: '100% 0%',
-    maskPosition: '100% 0%',
-    WebkitMaskSize: maskSize,
-    maskSize,
-    transition: 'mask-size 4200ms ease-out, -webkit-mask-size 4200ms ease-out',
+    transition: '--reveal-radius 4200ms ease-out',
   };
 
   return (
